@@ -14,6 +14,7 @@ public class EnemySpawner : MonoBehaviour
     private GameObject lastRow;
     private GameObject shootingGroup;
     private float speed;
+    public bool barrierVictory = false;
     //private bool gameOver;
     // Start is called before the first frame update
     void Start()
@@ -85,6 +86,16 @@ public class EnemySpawner : MonoBehaviour
                          shootingGroup = groups[i];
                          shootingGroup.GetComponent<EnemyGroup>().IsShootingGroup(true);
                          break;
+                    }
+               }
+          }
+
+          for (int i = groups.Length - 1; i >= 0; i--)
+          {
+               if (groups[i] != null)
+               {
+                    if (groups[i].transform.position.y <= -3.0) {
+                         barrierVictory = true;
                     }
                }
           }

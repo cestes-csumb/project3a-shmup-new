@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class InputForPointScreen : MonoBehaviour
 {
     float startTimer;
     bool readyTimer;
+    public Button startButton;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,9 +18,7 @@ public class InputForPointScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-          if (Input.GetKeyDown(KeyCode.Space)) {
-               readyTimer = true;
-          }
+          startButton.onClick.AddListener(SetTimer);
           if (readyTimer == true) {
                startTimer -= Time.deltaTime;
           }
@@ -26,4 +26,8 @@ public class InputForPointScreen : MonoBehaviour
                SceneManager.LoadScene("DemoScene");
           }
     }
+
+     void SetTimer() {
+          readyTimer = true;
+     }
 }

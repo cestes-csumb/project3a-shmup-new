@@ -12,9 +12,11 @@ public class Enemy : MonoBehaviour
     private bool isShooter;
     private float shootTimer;
     private int pointValue;
+    private Animator animator;
      // Start is called before the first frame update
      private void Start()
      {
+          animator = gameObject.GetComponent<Animator>();
           isShooter = false;
           shootTimer = 2.0f;
           scoreManager = FindObjectOfType<ScoreManager>();
@@ -25,6 +27,8 @@ public class Enemy : MonoBehaviour
           if (isShooter == true) {
                //shoot bullet on timer
                if (shootTimer <= 0.0f) {
+                    animator.SetTrigger("On_Shot");
+                    StartCoroutine(AnimationTimer());
                     //shoot bullet
                     shootTimer = 2.0f;
                     isShooter = false;
@@ -40,6 +44,7 @@ public class Enemy : MonoBehaviour
      void OnCollisionEnter2D(Collision2D collision)
     {
           if (collision.gameObject.name.StartsWith("Bullet")) {
+               animator.SetTrigger("On_Death");
                scoreManager.UpdateScore(pointValue);
                //Destory bullet on collision
                Destroy(collision.gameObject);
@@ -47,7 +52,7 @@ public class Enemy : MonoBehaviour
                GameObject hitParticleInstance = Instantiate(hitParticle);
                hitParticleInstance.transform.position = this.transform.position;
                Destroy(hitParticleInstance, 1.0f);
-               Destroy(gameObject);
+               Destroy(gameObject, 0.8f);
           }
     }
 
@@ -57,5 +62,13 @@ public class Enemy : MonoBehaviour
 
      public void SetPoints(int points) {
           pointValue = points;
+     }
+     
+     //We utilized a coroutine in class, this is what I'm utilizing to allow the animation to play before resetting the trigger
+     //https://answers.unity.com/questions/225213/c-countdown-timer.html
+     private IEnumerator AnimationTimer()
+     {
+          animator.SetTrigger("Return_To_Idle");
+          yield return new WaitForSeconds(0.8f);
      }
 }

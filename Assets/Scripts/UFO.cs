@@ -8,9 +8,11 @@ public class UFO : MonoBehaviour
     public float speed = 8.0f;
     public GameObject hitParticle;
     public ScoreManager scoreManager;
+    private Animator animator;
     // Start is called before the first frame update
     void Start()
     {
+         animator = gameObject.GetComponent<Animator>();
          scoreManager = FindObjectOfType<ScoreManager>();
          myRigidbody2D = GetComponent<Rigidbody2D>();
          move();
@@ -28,12 +30,13 @@ public class UFO : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+         Destroy(collision.gameObject);
+         animator.SetTrigger("On_Death");
          scoreManager.UpdateScore(100);
          GameObject hitParticleInstance = Instantiate(hitParticle);
          //Destory bullet on collision
-         Destroy(collision.gameObject);
          //destory self on collision
-         Destroy(gameObject);
+         Destroy(gameObject, 0.8f);
          Destroy(hitParticleInstance, 1.0f);
     }
 
